@@ -20,6 +20,8 @@ client.on("messageCreate", async (message) => {
   if (message.author.bot) return;
   if (message.attachments.size === 0) return;
 
+
+
   for (const attachment of message.attachments.values()) {
     const isImage =
       attachment.contentType?.startsWith("image/") ||
@@ -36,6 +38,8 @@ client.on("messageCreate", async (message) => {
       const buffer = Buffer.from(arrayBuffer);
 
       const image = await Jimp.read(buffer);
+
+      
 
       // 白黒加工
       image.greyscale();
