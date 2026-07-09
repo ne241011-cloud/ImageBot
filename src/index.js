@@ -1,4 +1,3 @@
-
 import { Client, Events, GatewayIntentBits } from "discord.js";
 import dotenv from "dotenv";
 import { Jimp } from "jimp";
@@ -37,12 +36,24 @@ client.on("messageCreate", async (message) => {
       const buffer = Buffer.from(arrayBuffer);
 
       const image = await Jimp.read(buffer);
-      const width = image.bitmap.width;
-      const height = image.bitmap.height;
 
-      await message.reply(
-        `${attachment.name} の画像サイズは **${width} x ${height}** ピクセルです。`,
-      );
+      // 白黒加工
+      image.greyscale();
+
+      // 加工した画像をバッファに変換
+      const outputBuffer = await image.getBuffer("image/png");
+
+      // Discordへ加工後の画像を返信
+      await message.reply({
+        content: "白黒画像に変換しました！",
+        files: [
+          {
+            attachment: outputBuffer,
+            name: "converted.png",
+          },
+        ],
+      });
+
     } catch (err) {
       console.error(err);
       await message.reply("画像の読み込みに失敗しました。");
@@ -51,4 +62,3 @@ client.on("messageCreate", async (message) => {
 });
 
 client.login(process.env.DISCORD_TOKEN);
-    
